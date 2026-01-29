@@ -22,6 +22,15 @@ public class Task {
     public void setDone(boolean done) {
         isDone = done;
     }
+
+    public void printTask() {
+        if (this.isDone) {
+            System.out.println("[✔] " + this.getDescription());
+        } else {
+            System.out.println("[ ] " + this.getDescription());
+        }
+
+    }
 }
 
 

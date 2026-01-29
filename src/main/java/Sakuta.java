@@ -31,8 +31,27 @@ public class Sakuta {
                 System.out.println("-------------------------------------------------");
                 System.out.println("__Tasks__");
                 for (int i = 0; i < taskNumber; i++) {
-                    System.out.println(i + 1 + ". " + tasks[i].getDescription());
+                    System.out.print(i + 1 + ". ");
+                    tasks[i].printTask();
                 }
+                System.out.println("-------------------------------------------------");
+            } else if (line.startsWith("mark")) {
+                String[] parts = line.split("\\s+");
+                int index = Integer.parseInt(parts[1]) - 1;
+                tasks[index].setDone(true);
+
+                System.out.println("-------------------------------------------------");
+                System.out.print("I have marked this task — ");
+                tasks[index].printTask();
+                System.out.println("-------------------------------------------------");
+            } else if (line.startsWith("unmark")) {
+                String[] parts = line.split("\\s+");
+                int index = Integer.parseInt(parts[1]) - 1;
+                tasks[index].setDone(false);
+
+                System.out.println("-------------------------------------------------");
+                System.out.print("I have unmarked this task — ");
+                tasks[index].printTask();
                 System.out.println("-------------------------------------------------");
             } else {
                 Task task = new Task(line);
