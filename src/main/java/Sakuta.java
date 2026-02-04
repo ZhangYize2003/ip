@@ -12,6 +12,11 @@ public class Sakuta {
         System.out.println("-----------------------------------------------------------");
     }
 
+    public static void greetUser() {
+        printResponse("Hello! I'm Sakuta.\n"
+                + "        Is there anything I can help you with?");
+    }
+
     public static void addTask(Task task) {
         tasks[taskNumber] = task;
         taskNumber++;
@@ -20,8 +25,7 @@ public class Sakuta {
     public static void main(String[] args) {
         boolean isChatting = true;
 
-        printResponse("Hello! I'm Sakuta.\n"
-                + "        Is there something you want from me?");
+        greetUser();
 
         while (isChatting) {
             System.out.print("> ");
@@ -77,6 +81,10 @@ public class Sakuta {
 
             case "mark":
                 int markIndex = Integer.parseInt(partsBySpace[1]) - 1;
+                if (markIndex >= taskNumber) {
+                    printResponse("Are you trolling? This task doesn't exist!");
+                    break;
+                }
                 tasks[markIndex].setDone(true);
 
                 printResponse("I have marked this task — " + tasks[markIndex].toString());
@@ -84,6 +92,10 @@ public class Sakuta {
 
             case "unmark":
                 int unmarkIndex = Integer.parseInt(partsBySpace[1]) - 1;
+                if (unmarkIndex >= taskNumber) {
+                    printResponse("Are you trolling? This task doesn't exist!");
+                    break;
+                }
                 tasks[unmarkIndex].setDone(false);
 
                 printResponse("I have unmarked this task — " + tasks[unmarkIndex].toString());
@@ -91,6 +103,7 @@ public class Sakuta {
 
             default:
                 printResponse(line); // Echoes the user
+                break;
             }
         }
 
