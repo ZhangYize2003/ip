@@ -1,4 +1,5 @@
 public class Task {
+
     private String description;
     private boolean isDone;
 
@@ -23,13 +24,12 @@ public class Task {
         isDone = done;
     }
 
-    public void printTask() {
+    public String toString() {
         if (this.isDone) {
-            System.out.println("[✔] " + this.getDescription());
+            return "[✔] " + this.getDescription();
         } else {
-            System.out.println("[ ] " + this.getDescription());
+            return "[ ] " + this.getDescription();
         }
-
     }
 }
 
