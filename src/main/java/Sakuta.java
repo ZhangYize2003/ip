@@ -62,7 +62,11 @@ public class Sakuta {
                         throw new SakutaException("Don't be stupid. Add a description to your task!");
                     }
 
+                    if (partsBySlash.length < 2) {
+                        throw new SakutaException("Bro, your deadline is missing a /by date...");
+                    }
                     String dueDate = partsBySlash[1].trim();
+
                     addTask(new Deadline(deadlineDesc, dueDate));
 
                     printResponse("I have added — " + deadlineDesc);
@@ -74,8 +78,12 @@ public class Sakuta {
                         throw new SakutaException("Don't be stupid. Add a description to your task!");
                     }
 
+                    if (partsBySlash.length < 3) {
+                        throw new SakutaException("Bro, your event is missing /from and /to dates...");
+                    }
                     String startDate = partsBySlash[1].trim();
                     String endDate = partsBySlash[2].trim();
+
                     addTask(new Event(eventDesc, startDate, endDate));
 
                     printResponse("I have added — " + eventDesc);
@@ -97,22 +105,38 @@ public class Sakuta {
                     break;
 
                 case "mark":
-                    int markIndex = Integer.parseInt(partsBySpace[1]) - 1;
-                    if (markIndex >= taskNumber) {
-                        printResponse("Are you trolling? This task doesn't exist!");
-                        break;
+                    int markIndex;
+                    try {
+                        markIndex = Integer.parseInt(partsBySpace[1]) - 1;
+                    } catch (IndexOutOfBoundsException e) {
+                        throw new SakutaException("I think you forgot to put the task number.");
+                    } catch (NumberFormatException e) {
+                        throw new SakutaException("Use your brain and put a valid integer please...");
                     }
+
+                    if (markIndex < 0 || markIndex >= taskNumber) {
+                        throw new SakutaException("Are you trolling? This task doesn't exist!");
+                    }
+
                     tasks[markIndex].setDone(true);
 
                     printResponse("I have marked this task — " + tasks[markIndex].toString());
                     break;
 
                 case "unmark":
-                    int unmarkIndex = Integer.parseInt(partsBySpace[1]) - 1;
-                    if (unmarkIndex >= taskNumber) {
-                        printResponse("Are you trolling? This task doesn't exist!");
-                        break;
+                    int unmarkIndex;
+                    try {
+                        unmarkIndex = Integer.parseInt(partsBySpace[1]) - 1;
+                    } catch (IndexOutOfBoundsException e) {
+                        throw new SakutaException("I think you forgot to put the task number.");
+                    } catch (NumberFormatException e) {
+                        throw new SakutaException("Use your brain and put a valid integer please...");
                     }
+
+                    if (unmarkIndex < 0 || unmarkIndex >= taskNumber) {
+                        throw new SakutaException("Are you trolling? This task doesn't exist!");
+                    }
+
                     tasks[unmarkIndex].setDone(false);
 
                     printResponse("I have unmarked this task — " + tasks[unmarkIndex].toString());
