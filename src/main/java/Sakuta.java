@@ -22,6 +22,10 @@ public class Sakuta {
         taskNumber++;
     }
 
+    public static boolean isDescriptionEmpty(String description) {
+        return description.isEmpty();
+    }
+
     public static void main(String[] args) {
         boolean isChatting = true;
 
@@ -42,6 +46,10 @@ public class Sakuta {
 
             case "todo":
                 String toDoDesc = partsBySlash[0].substring(4).trim();
+                if (isDescriptionEmpty(toDoDesc)) {
+                    printResponse("Don't be stupid. Add a description to your task!");
+                    break;
+                }
                 addTask(new Todo(toDoDesc));
 
                 printResponse("I have added — " + toDoDesc);
@@ -49,6 +57,10 @@ public class Sakuta {
 
             case "deadline":
                 String deadlineDesc = partsBySlash[0].substring(8).trim();
+                if (isDescriptionEmpty(deadlineDesc)) {
+                    printResponse("Don't be stupid. Add a description to your task!");
+                    break;
+                }
                 String dueDate = partsBySlash[1].trim();
                 addTask(new Deadline(deadlineDesc, dueDate));
 
@@ -57,6 +69,10 @@ public class Sakuta {
 
             case "event":
                 String eventDesc = partsBySlash[0].substring(5).trim();
+                if (isDescriptionEmpty(eventDesc)) {
+                    printResponse("Don't be stupid. Add a description to your task!");
+                    break;
+                }
                 String startDate = partsBySlash[1].trim();
                 String endDate = partsBySlash[2].trim();
                 addTask(new Event(eventDesc, startDate, endDate));
@@ -102,7 +118,8 @@ public class Sakuta {
                 break;
 
             default:
-                printResponse(line); // Echoes the user
+                // Handles any incorrect inputs
+                printResponse("Huh? What are you even talking about?");
                 break;
             }
         }
