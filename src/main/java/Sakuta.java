@@ -6,26 +6,50 @@ public class Sakuta {
     private static Task[] tasks = new Task[MAX_TASKS];
     private static int taskNumber = 0;
 
+    /**
+     * Prints out a formatted response
+     *
+     * @param line The message to display to the user
+     */
     public static void printResponse(String line) {
         System.out.println("-----------------------------------------------------------");
         System.out.println("Sakuta: " + line);
         System.out.println("-----------------------------------------------------------");
     }
 
+    /**
+     * Displays a greeting when the chatbot starts
+     */
     public static void greetUser() {
         printResponse("Hello! I'm Sakuta.\n"
                 + "        Is there anything I can help you with?");
     }
 
+    /**
+     * Adds a task to the task list
+     *
+     * @param task The task object that the user inputted
+     */
     public static void addTask(Task task) {
         tasks[taskNumber] = task;
         taskNumber++;
     }
 
+    /**
+     * Checks if the task description is empty
+     *
+     * @param description The description string of the task object to check
+     * @return true if description is empty, false otherwise
+     */
     public static boolean isDescriptionEmpty(String description) {
         return description.isEmpty();
     }
 
+    /**
+     * Main loop of the chatbot Sakuta
+     *
+     * @param args The user input from CLI
+     */
     public static void main(String[] args) {
         boolean isChatting = true;
 
