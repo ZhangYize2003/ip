@@ -1,10 +1,9 @@
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Sakuta {
 
-    private static final int MAX_TASKS = 100;
-    private static Task[] tasks = new Task[MAX_TASKS];
-    private static int taskNumber = 0;
+    private static ArrayList<Task> tasks = new ArrayList<>();
 
     /**
      * Prints out a formatted response
@@ -31,8 +30,7 @@ public class Sakuta {
      * @param task The task object that the user inputted
      */
     public static void addTask(Task task) {
-        tasks[taskNumber] = task;
-        taskNumber++;
+        tasks.add(task);
     }
 
     /**
@@ -63,6 +61,7 @@ public class Sakuta {
                 String[] partsBySpace = line.split("\\s+");
                 String[] partsBySlash = line.split("/");
                 String command = partsBySpace[0].toLowerCase();
+                int numOfTasks = tasks.size();
 
                 switch (command) {
                 case "bye":
@@ -114,17 +113,17 @@ public class Sakuta {
                     break;
 
                 case "list":
-                    if (taskNumber == 0) {
+                    if (numOfTasks == 0) {
                         printResponse("You have not added any task!");
                         break;
                     }
 
                     System.out.println("-----------------------------------------------------------");
                     System.out.println("__Tasks__");
-                    for (int i = 0; i < taskNumber; i++) {
-                        System.out.println(i + 1 + ". " + tasks[i].toString());
+                    for (int i = 0; i < numOfTasks; i++) {
+                        System.out.println(i + 1 + ". " + tasks.get(i).toString());
                     }
-                    System.out.println("\nLooks like you have " + taskNumber + " Tasks. Better start grinding!");
+                    System.out.println("\nLooks like you have " + numOfTasks + " Tasks. Better start grinding!");
                     System.out.println("-----------------------------------------------------------");
                     break;
 
@@ -138,13 +137,13 @@ public class Sakuta {
                         throw new SakutaException("Use your brain and put a valid integer please...");
                     }
 
-                    if (markIndex < 0 || markIndex >= taskNumber) {
+                    if (markIndex < 0 || markIndex >= numOfTasks) {
                         throw new SakutaException("Are you trolling? This task doesn't exist!");
                     }
 
-                    tasks[markIndex].setDone(true);
+                    tasks.get(markIndex).setDone(true);
 
-                    printResponse("I have marked this task — " + tasks[markIndex].toString());
+                    printResponse("I have marked this task — " + tasks.get(markIndex).toString());
                     break;
 
                 case "unmark":
@@ -157,13 +156,13 @@ public class Sakuta {
                         throw new SakutaException("Use your brain and put a valid integer please...");
                     }
 
-                    if (unmarkIndex < 0 || unmarkIndex >= taskNumber) {
+                    if (unmarkIndex < 0 || unmarkIndex >= numOfTasks) {
                         throw new SakutaException("Are you trolling? This task doesn't exist!");
                     }
 
-                    tasks[unmarkIndex].setDone(false);
+                    tasks.get(unmarkIndex).setDone(false);
 
-                    printResponse("I have unmarked this task — " + tasks[unmarkIndex].toString());
+                    printResponse("I have unmarked this task — " + tasks.get(unmarkIndex).toString());
                     break;
 
                 default:
