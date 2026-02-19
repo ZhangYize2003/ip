@@ -162,7 +162,29 @@ public class Sakuta {
 
                     tasks.get(unmarkIndex).setDone(false);
 
-                    printResponse("I have unmarked this task — " + tasks.get(unmarkIndex).toString());
+                    printResponse("I have unmarked this task — " + tasks.get(unmarkIndex).toString() + "" +
+                            "\nYou now have " + numOfTasks + " tasks left");
+                    break;
+
+                case "delete":
+                    int deleteIndex;
+                    try {
+                        deleteIndex = Integer.parseInt(partsBySpace[1]) - 1;
+
+                    } catch (IndexOutOfBoundsException e) {
+                        throw new SakutaException("I think you forgot to put the task number.");
+                    } catch (NumberFormatException e) {
+                        throw new SakutaException("Use your brain and put a valid integer please...");
+                    }
+
+                    if (deleteIndex < 0 || deleteIndex >= numOfTasks) {
+                        throw new SakutaException("Are you trolling? This task doesn't exist!");
+                    }
+
+                    String taskDesc = tasks.get(deleteIndex).toString();
+                    tasks.remove(deleteIndex);
+
+                    printResponse("I have deleted this task — " + taskDesc);
                     break;
 
                 default:
