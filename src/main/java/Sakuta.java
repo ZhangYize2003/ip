@@ -1,10 +1,15 @@
+import java.io.*;
+import java.nio.file.Files;
 import java.util.Scanner;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class Sakuta {
 
     private static final int MAX_TASKS = 100;
     private static Task[] tasks = new Task[MAX_TASKS];
     private static int taskNumber = 0;
+    private static final String FILE_PATH = "./data/sakuta.txt";
 
     /**
      * Prints out a formatted response
@@ -35,6 +40,70 @@ public class Sakuta {
         taskNumber++;
     }
 
+    public static void loadFromFile() {
+        try {
+            Path dirPath = Paths.get("./data");
+            Path filePath = Paths.get(FILE_PATH);
+
+            // Create directory if there is none
+            if (!Files.exists(dirPath)) {
+                Files.createDirectory(dirPath);
+            }
+
+            // No file means no data to load
+            if (!Files.exists(filePath)) {
+                return;
+            }
+
+            File file = new File(FILE_PATH);
+            Scanner s = new Scanner(file);
+
+            while (s.hasNext()) {
+                String line = s.nextLine();
+                processFileLine(line);
+            }
+
+            s.close();
+        } catch (IOException e) {
+            printResponse("Woah what? There was an error loading the file.");
+        }
+    }
+
+    public static void processFileLine(String line) {
+        String[] parts = line.split(" \\| ");
+        String taskType = parts[0];
+        boolean isDone = parts[1].equals("1");
+        String desc = parts[2];
+
+        Task task;
+
+        switch (taskType) {
+        case "T":
+            task = new Todo(desc);
+            break;
+        case "D":
+            task = new Deadline(desc, parts[3]);
+            break;
+        case "E":
+            task = new Event(desc, parts[3], parts[4]);
+            break;
+        default:
+            return;
+        }
+
+        task.setDone(isDone);
+        addTask(task);
+    }
+
+    public static void saveToFile() throws IOException {
+        FileWriter fw = new FileWriter(FILE_PATH);
+        for (int i = 0; i < taskNumber; i++) {
+            fw.write(tasks[i].toFileString());
+            fw.write("\n");
+        }
+        fw.close();
+    }
+
     /**
      * Checks if the task description is empty
      *
@@ -54,6 +123,7 @@ public class Sakuta {
         boolean isChatting = true;
 
         greetUser();
+        loadFromFile();
 
         while (isChatting) {
             try {
@@ -66,6 +136,12 @@ public class Sakuta {
 
                 switch (command) {
                 case "bye":
+                    try {
+                        saveToFile();
+                    } catch (IOException e) {
+                        printResponse("God dammit, the file failed to save.");
+                    }
+
                     isChatting = false;
                     break;
 

@@ -31,6 +31,10 @@ public class Task {
             return "[ ] " + this.getDescription();
         }
     }
+
+    public String toFileString() {
+        return "";
+    }
 }
 
 
