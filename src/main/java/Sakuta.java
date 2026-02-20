@@ -264,6 +264,7 @@ public class Sakuta {
 
                     String taskDesc = tasks.get(deleteIndex).toString();
                     tasks.remove(deleteIndex);
+                    saveToFile();
 
                     printResponse("I have deleted this task — " + taskDesc);
                     break;
