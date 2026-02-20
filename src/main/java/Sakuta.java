@@ -1,9 +1,14 @@
+import java.io.*;
+import java.nio.file.Files;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class Sakuta {
 
     private static ArrayList<Task> tasks = new ArrayList<>();
+    private static final String FILE_PATH = "./data/sakuta.txt";
 
     /**
      * Prints out a formatted response
@@ -33,6 +38,75 @@ public class Sakuta {
         tasks.add(task);
     }
 
+    public static void loadFromFile() {
+        try {
+            Path dirPath = Paths.get("./data");
+            Path filePath = Paths.get(FILE_PATH);
+
+            // Create directory if there is none
+            if (!Files.exists(dirPath)) {
+                Files.createDirectory(dirPath);
+            }
+
+            // No file means no data to load
+            if (!Files.exists(filePath)) {
+                return;
+            }
+
+            File file = new File(FILE_PATH);
+            Scanner s = new Scanner(file);
+
+            while (s.hasNext()) {
+                String line = s.nextLine();
+                processFileLine(line);
+            }
+
+            s.close();
+        } catch (IOException e) {
+            printResponse("Woah what? There was an error loading the file.");
+        }
+    }
+
+    public static void processFileLine(String line) {
+        String[] parts = line.split(" \\| ");
+        String taskType = parts[0];
+        boolean isDone = parts[1].equals("1");
+        String desc = parts[2];
+
+        Task task;
+
+        switch (taskType) {
+        case "T":
+            task = new Todo(desc);
+            break;
+        case "D":
+            task = new Deadline(desc, parts[3]);
+            break;
+        case "E":
+            task = new Event(desc, parts[3], parts[4]);
+            break;
+        default:
+            return;
+        }
+
+        task.setDone(isDone);
+        addTask(task);
+    }
+
+    public static void saveToFile() {
+        try {
+            FileWriter fw = new FileWriter(FILE_PATH);
+            for (int i = 0; i < tasks.size(); i++) {
+                fw.write(tasks.get(i).toFileString());
+                fw.write("\n");
+            }
+
+            fw.close();
+        } catch(IOException e){
+                printResponse("God dammit, the file failed to save.");
+        }
+    }
+
     /**
      * Checks if the task description is empty
      *
@@ -52,6 +126,7 @@ public class Sakuta {
         boolean isChatting = true;
 
         greetUser();
+        loadFromFile();
 
         while (isChatting) {
             try {
@@ -65,6 +140,7 @@ public class Sakuta {
 
                 switch (command) {
                 case "bye":
+                    saveToFile();
                     isChatting = false;
                     break;
 
@@ -75,6 +151,7 @@ public class Sakuta {
                     }
 
                     addTask(new Todo(toDoDesc));
+                    saveToFile();
 
                     printResponse("I have added — " + toDoDesc);
                     break;
@@ -91,6 +168,7 @@ public class Sakuta {
                     String dueDate = partsBySlash[1].trim();
 
                     addTask(new Deadline(deadlineDesc, dueDate));
+                    saveToFile();
 
                     printResponse("I have added — " + deadlineDesc);
                     break;
@@ -108,6 +186,7 @@ public class Sakuta {
                     String endDate = partsBySlash[2].trim();
 
                     addTask(new Event(eventDesc, startDate, endDate));
+                    saveToFile();
 
                     printResponse("I have added — " + eventDesc);
                     break;
@@ -142,6 +221,7 @@ public class Sakuta {
                     }
 
                     tasks.get(markIndex).setDone(true);
+                    saveToFile();
 
                     printResponse("I have marked this task — " + tasks.get(markIndex).toString());
                     break;
@@ -161,6 +241,7 @@ public class Sakuta {
                     }
 
                     tasks.get(unmarkIndex).setDone(false);
+                    saveToFile();
 
                     printResponse("I have unmarked this task — " + tasks.get(unmarkIndex).toString() + "" +
                             "\nYou now have " + numOfTasks + " tasks left");

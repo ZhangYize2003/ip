@@ -30,4 +30,9 @@ public class Event extends Task {
         return "[E]" + super.toString() + " (" + startDate.replaceFirst("from", "from:")
                 + endDate.replaceFirst("to", " to:") + ")";
     }
+
+    @Override
+    public String toFileString() {
+        return "E | " + (isDone() ? "1 | " : "0 | " ) + getDescription() + " | " + startDate + " | " + endDate;
+    }
 }
