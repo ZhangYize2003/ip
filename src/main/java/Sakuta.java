@@ -95,13 +95,18 @@ public class Sakuta {
         addTask(task);
     }
 
-    public static void saveToFile() throws IOException {
-        FileWriter fw = new FileWriter(FILE_PATH);
-        for (int i = 0; i < taskNumber; i++) {
-            fw.write(tasks[i].toFileString());
-            fw.write("\n");
+    public static void saveToFile() {
+        try {
+            FileWriter fw = new FileWriter(FILE_PATH);
+            for (int i = 0; i < taskNumber; i++) {
+                fw.write(tasks[i].toFileString());
+                fw.write("\n");
+            }
+
+            fw.close();
+        } catch(IOException e){
+                printResponse("God dammit, the file failed to save.");
         }
-        fw.close();
     }
 
     /**
@@ -136,12 +141,7 @@ public class Sakuta {
 
                 switch (command) {
                 case "bye":
-                    try {
-                        saveToFile();
-                    } catch (IOException e) {
-                        printResponse("God dammit, the file failed to save.");
-                    }
-
+                    saveToFile();
                     isChatting = false;
                     break;
 
@@ -152,6 +152,7 @@ public class Sakuta {
                     }
 
                     addTask(new Todo(toDoDesc));
+                    saveToFile();
 
                     printResponse("I have added — " + toDoDesc);
                     break;
@@ -168,6 +169,7 @@ public class Sakuta {
                     String dueDate = partsBySlash[1].trim();
 
                     addTask(new Deadline(deadlineDesc, dueDate));
+                    saveToFile();
 
                     printResponse("I have added — " + deadlineDesc);
                     break;
@@ -185,6 +187,7 @@ public class Sakuta {
                     String endDate = partsBySlash[2].trim();
 
                     addTask(new Event(eventDesc, startDate, endDate));
+                    saveToFile();
 
                     printResponse("I have added — " + eventDesc);
                     break;
@@ -219,6 +222,7 @@ public class Sakuta {
                     }
 
                     tasks[markIndex].setDone(true);
+                    saveToFile();
 
                     printResponse("I have marked this task — " + tasks[markIndex].toString());
                     break;
@@ -238,6 +242,7 @@ public class Sakuta {
                     }
 
                     tasks[unmarkIndex].setDone(false);
+                    saveToFile();
 
                     printResponse("I have unmarked this task — " + tasks[unmarkIndex].toString());
                     break;

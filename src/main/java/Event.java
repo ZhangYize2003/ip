@@ -33,6 +33,6 @@ public class Event extends Task {
 
     @Override
     public String toFileString() {
-        return "E | " + (isDone() ? "1 | " : " 0 | " ) + getDescription() + " | " + startDate + " | " + endDate;
+        return "E | " + (isDone() ? "1 | " : "0 | " ) + getDescription() + " | " + startDate + " | " + endDate;
     }
 }
