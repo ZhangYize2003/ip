@@ -4,41 +4,23 @@ import java.util.ArrayList;
 
 public class Sakuta {
 
-    private static ArrayList<Task> tasks = new ArrayList<>();
-    private static Storage storage = new Storage("./data/sakuta.txt");
+    private ArrayList<Task> tasks = new ArrayList<>();
+    private Storage storage = new Storage("./data/sakuta.txt");
+    private Ui ui = new Ui();
 
-    /**
-     * Prints out a formatted response
-     *
-     * @param line The message to display to the user
-     */
-    public static void printResponse(String line) {
-        System.out.println("-----------------------------------------------------------");
-        System.out.println("Sakuta: " + line);
-        System.out.println("-----------------------------------------------------------");
-    }
-
-    /**
-     * Displays a greeting when the chatbot starts
-     */
-    public static void greetUser() {
-        printResponse("Hello! I'm Sakuta.\n"
-                + "        Is there anything I can help you with?");
-    }
-
-    public static void loadFromStorage() {
+    public void loadFromStorage() {
         try {
             tasks = storage.loadTasks();
         } catch (IOException e) {
-            printResponse("Woah what? There was an error loading the file.");
+            ui.printResponse("Woah what? There was an error loading the file.");
         }
     }
 
-    public static void saveToStorage() {
+    public void saveToStorage() {
         try {
             storage.storeTasks(tasks);
         } catch(IOException e){
-            printResponse("God dammit, the file failed to save.");
+            ui.printResponse("God dammit, the file failed to save.");
         }
     }
 
@@ -48,22 +30,21 @@ public class Sakuta {
      * @param description The description string of the task object to check
      * @return true if description is empty, false otherwise
      */
-    public static boolean isDescriptionEmpty(String description) {
+    public boolean isDescriptionEmpty(String description) {
         return description.isEmpty();
     }
 
     /**
-     * Main loop of the chatbot Sakuta
+     * Running loop of the chatbot Sakuta
      *
-     * @param args The user input from CLI
      */
-    public static void main(String[] args) {
-        boolean isChatting = true;
+    public void run() {
+        boolean isRunning = true;
 
-        greetUser();
+        ui.greetUser();
         loadFromStorage();
 
-        while (isChatting) {
+        while (isRunning) {
             try {
                 System.out.print("> ");
                 Scanner in = new Scanner(System.in);
@@ -76,7 +57,7 @@ public class Sakuta {
                 switch (command) {
                 case "bye":
                     saveToStorage();
-                    isChatting = false;
+                    isRunning = false;
                     break;
 
                 case "todo":
@@ -88,7 +69,7 @@ public class Sakuta {
                     tasks.add(new Todo(toDoDesc));
                     saveToStorage();
 
-                    printResponse("I have added — " + toDoDesc);
+                    ui.printResponse("I have added — " + toDoDesc);
                     break;
 
                 case "deadline":
@@ -105,7 +86,7 @@ public class Sakuta {
                     tasks.add(new Deadline(deadlineDesc, dueDate));
                     saveToStorage();
 
-                    printResponse("I have added — " + deadlineDesc);
+                    ui.printResponse("I have added — " + deadlineDesc);
                     break;
 
                 case "event":
@@ -123,22 +104,16 @@ public class Sakuta {
                     tasks.add(new Event(eventDesc, startDate, endDate));
                     saveToStorage();
 
-                    printResponse("I have added — " + eventDesc);
+                    ui.printResponse("I have added — " + eventDesc);
                     break;
 
                 case "list":
                     if (numOfTasks == 0) {
-                        printResponse("You have not added any task!");
+                        ui.printResponse("You have not added any task!");
                         break;
                     }
 
-                    System.out.println("-----------------------------------------------------------");
-                    System.out.println("__Tasks__");
-                    for (int i = 0; i < numOfTasks; i++) {
-                        System.out.println(i + 1 + ". " + tasks.get(i).toString());
-                    }
-                    System.out.println("\nLooks like you have " + numOfTasks + " Tasks. Better start grinding!");
-                    System.out.println("-----------------------------------------------------------");
+                    ui.listTasks(tasks);
                     break;
 
                 case "mark":
@@ -158,7 +133,7 @@ public class Sakuta {
                     tasks.get(markIndex).setDone(true);
                     saveToStorage();
 
-                    printResponse("I have marked this task - " + tasks.get(markIndex).toString());
+                    ui.printResponse("I have marked this task - " + tasks.get(markIndex).getDescription());
                     break;
 
                 case "unmark":
@@ -178,7 +153,7 @@ public class Sakuta {
                     tasks.get(unmarkIndex).setDone(false);
                     saveToStorage();
 
-                    printResponse("I have unmarked this task - " + tasks.get(unmarkIndex).toString() + "\n" +
+                    ui.printResponse("I have unmarked this task - " + tasks.get(unmarkIndex).getDescription() + "\n" +
                             "\nYou now have " + numOfTasks + " tasks left");
                     break;
 
@@ -201,19 +176,23 @@ public class Sakuta {
                     tasks.remove(deleteIndex);
                     saveToStorage();
 
-                    printResponse("I have deleted this task - " + taskDesc);
+                    ui.printResponse("I have deleted this task - " + taskDesc);
                     break;
 
                 default:
                     // Handles any incorrect inputs
-                    printResponse("Huh? What are you even talking about?");
+                    ui.printResponse("Huh? What are you even talking about?");
                     break;
                 }
             } catch (SakutaException e) {
-                printResponse(e.getMessage());
+                ui.printResponse(e.getMessage());
             }
         }
 
-        printResponse("See ya. It's nice talking to you.");
+        ui.printResponse("See ya. It's nice talking to you.");
+    }
+
+    public static void main(String[] args) {
+        new Sakuta().run();
     }
 }

@@ -15,7 +15,7 @@ public class Storage {
         this.filePath = filePath;
     }
 
-    public static Task processFileLine(String line) {
+    public Task processFileLine(String line) {
         String[] parts = line.split(" \\| ");
         String taskType = parts[0];
         boolean isDone = parts[1].equals("1");
