@@ -1,5 +1,4 @@
-import java.io.*;
-import java.util.Scanner;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Sakuta {
@@ -7,6 +6,7 @@ public class Sakuta {
     private ArrayList<Task> tasks = new ArrayList<>();
     private Storage storage = new Storage("./data/sakuta.txt");
     private Ui ui = new Ui();
+    private Parser parser = new Parser();
 
     public void loadFromStorage() {
         try {
@@ -46,9 +46,7 @@ public class Sakuta {
 
         while (isRunning) {
             try {
-                System.out.print("> ");
-                Scanner in = new Scanner(System.in);
-                String line = in.nextLine().trim();
+                String line = parser.readCommand();
                 String[] partsBySpace = line.split("\\s+");
                 String[] partsBySlash = line.split("/");
                 String command = partsBySpace[0].toLowerCase();
