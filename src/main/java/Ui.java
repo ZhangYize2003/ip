@@ -1,0 +1,36 @@
+import java.util.ArrayList;
+
+public class Ui {
+
+    public Ui() {
+    }
+
+    /**
+     * Prints out a formatted response
+     *
+     * @param line The message to display to the user
+     */
+    public void printResponse(String line) {
+        System.out.println("-----------------------------------------------------------");
+        System.out.println("Sakuta: " + line);
+        System.out.println("-----------------------------------------------------------");
+    }
+
+    /**
+     * Displays a greeting when the chatbot starts
+     */
+    public void greetUser() {
+        printResponse("Hello! I'm Sakuta.\n"
+                + "        Is there anything I can help you with?");
+    }
+
+    public void listTasks(ArrayList<Task> tasks) {
+        System.out.println("-----------------------------------------------------------");
+        System.out.println("__Tasks__");
+        for (int i = 0; i < tasks.size(); i++) {
+            System.out.println(i + 1 + ". " + tasks.get(i).toString());
+        }
+        System.out.println("\nLooks like you have " + tasks.size() + " Tasks. Better start grinding!");
+        System.out.println("-----------------------------------------------------------");
+    }
+}
