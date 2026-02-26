@@ -1,14 +1,11 @@
 import java.io.*;
-import java.nio.file.Files;
 import java.util.Scanner;
 import java.util.ArrayList;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class Sakuta {
 
     private static ArrayList<Task> tasks = new ArrayList<>();
-    private static final String FILE_PATH = "./data/sakuta.txt";
+    private static Storage storage = new Storage("./data/sakuta.txt");
 
     /**
      * Prints out a formatted response
@@ -29,81 +26,19 @@ public class Sakuta {
                 + "        Is there anything I can help you with?");
     }
 
-    /**
-     * Adds a task to the task list
-     *
-     * @param task The task object that the user inputted
-     */
-    public static void addTask(Task task) {
-        tasks.add(task);
-    }
-
-    public static void loadFromFile() {
+    public static void loadFromStorage() {
         try {
-            Path dirPath = Paths.get("./data");
-            Path filePath = Paths.get(FILE_PATH);
-
-            // Create directory if there is none
-            if (!Files.exists(dirPath)) {
-                Files.createDirectory(dirPath);
-            }
-
-            // No file means no data to load
-            if (!Files.exists(filePath)) {
-                return;
-            }
-
-            File file = new File(FILE_PATH);
-            Scanner s = new Scanner(file);
-
-            while (s.hasNext()) {
-                String line = s.nextLine();
-                processFileLine(line);
-            }
-
-            s.close();
+            tasks = storage.loadTasks();
         } catch (IOException e) {
             printResponse("Woah what? There was an error loading the file.");
         }
     }
 
-    public static void processFileLine(String line) {
-        String[] parts = line.split(" \\| ");
-        String taskType = parts[0];
-        boolean isDone = parts[1].equals("1");
-        String desc = parts[2];
-
-        Task task;
-
-        switch (taskType) {
-        case "T":
-            task = new Todo(desc);
-            break;
-        case "D":
-            task = new Deadline(desc, parts[3]);
-            break;
-        case "E":
-            task = new Event(desc, parts[3], parts[4]);
-            break;
-        default:
-            return;
-        }
-
-        task.setDone(isDone);
-        addTask(task);
-    }
-
-    public static void saveToFile() {
+    public static void saveToStorage() {
         try {
-            FileWriter fw = new FileWriter(FILE_PATH);
-            for (int i = 0; i < tasks.size(); i++) {
-                fw.write(tasks.get(i).toFileString());
-                fw.write("\n");
-            }
-
-            fw.close();
+            storage.storeTasks(tasks);
         } catch(IOException e){
-                printResponse("God dammit, the file failed to save.");
+            printResponse("God dammit, the file failed to save.");
         }
     }
 
@@ -126,7 +61,7 @@ public class Sakuta {
         boolean isChatting = true;
 
         greetUser();
-        loadFromFile();
+        loadFromStorage();
 
         while (isChatting) {
             try {
@@ -140,7 +75,7 @@ public class Sakuta {
 
                 switch (command) {
                 case "bye":
-                    saveToFile();
+                    saveToStorage();
                     isChatting = false;
                     break;
 
@@ -150,8 +85,8 @@ public class Sakuta {
                         throw new SakutaException("Don't be stupid. Add a description to your task!");
                     }
 
-                    addTask(new Todo(toDoDesc));
-                    saveToFile();
+                    tasks.add(new Todo(toDoDesc));
+                    saveToStorage();
 
                     printResponse("I have added — " + toDoDesc);
                     break;
@@ -167,8 +102,8 @@ public class Sakuta {
                     }
                     String dueDate = partsBySlash[1].trim();
 
-                    addTask(new Deadline(deadlineDesc, dueDate));
-                    saveToFile();
+                    tasks.add(new Deadline(deadlineDesc, dueDate));
+                    saveToStorage();
 
                     printResponse("I have added — " + deadlineDesc);
                     break;
@@ -185,8 +120,8 @@ public class Sakuta {
                     String startDate = partsBySlash[1].trim();
                     String endDate = partsBySlash[2].trim();
 
-                    addTask(new Event(eventDesc, startDate, endDate));
-                    saveToFile();
+                    tasks.add(new Event(eventDesc, startDate, endDate));
+                    saveToStorage();
 
                     printResponse("I have added — " + eventDesc);
                     break;
@@ -221,9 +156,9 @@ public class Sakuta {
                     }
 
                     tasks.get(markIndex).setDone(true);
-                    saveToFile();
+                    saveToStorage();
 
-                    printResponse("I have marked this task — " + tasks.get(markIndex).toString());
+                    printResponse("I have marked this task - " + tasks.get(markIndex).toString());
                     break;
 
                 case "unmark":
@@ -241,9 +176,9 @@ public class Sakuta {
                     }
 
                     tasks.get(unmarkIndex).setDone(false);
-                    saveToFile();
+                    saveToStorage();
 
-                    printResponse("I have unmarked this task — " + tasks.get(unmarkIndex).toString() + "" +
+                    printResponse("I have unmarked this task - " + tasks.get(unmarkIndex).toString() + "\n" +
                             "\nYou now have " + numOfTasks + " tasks left");
                     break;
 
@@ -264,9 +199,9 @@ public class Sakuta {
 
                     String taskDesc = tasks.get(deleteIndex).toString();
                     tasks.remove(deleteIndex);
-                    saveToFile();
+                    saveToStorage();
 
-                    printResponse("I have deleted this task — " + taskDesc);
+                    printResponse("I have deleted this task - " + taskDesc);
                     break;
 
                 default:
