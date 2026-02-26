@@ -1,16 +1,15 @@
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class Sakuta {
 
-    private ArrayList<Task> tasks = new ArrayList<>();
+    private TaskList tasks = new TaskList();
     private Storage storage = new Storage("./data/sakuta.txt");
     private Ui ui = new Ui();
     private Parser parser = new Parser();
 
     public void loadFromStorage() {
         try {
-            tasks = storage.loadTasks();
+            tasks = new TaskList(storage.loadTasks());
         } catch (IOException e) {
             ui.printResponse("Woah what? There was an error loading the file.");
         }
@@ -18,8 +17,8 @@ public class Sakuta {
 
     public void saveToStorage() {
         try {
-            storage.storeTasks(tasks);
-        } catch(IOException e){
+            storage.storeTasks(tasks.getAllTasks());
+        } catch(IOException e) {
             ui.printResponse("God dammit, the file failed to save.");
         }
     }
@@ -111,7 +110,7 @@ public class Sakuta {
                         break;
                     }
 
-                    ui.listTasks(tasks);
+                    ui.listTasks(tasks.getAllTasks());
                     break;
 
                 case "mark":
