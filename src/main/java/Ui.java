@@ -33,4 +33,14 @@ public class Ui {
         System.out.println("\nLooks like you have " + tasks.size() + " Tasks. Better start grinding!");
         System.out.println("-----------------------------------------------------------");
     }
+
+    public void listMatchedTasks(ArrayList<Task> tasks) {
+        System.out.println("-----------------------------------------------------------");
+        System.out.println("__Tasks__");
+        for (int i = 0; i < tasks.size(); i++) {
+            System.out.println(i + 1 + ". " + tasks.get(i).toString());
+        }
+        System.out.println("\nLooks like you have " + tasks.size() + " matching tasks.");
+        System.out.println("-----------------------------------------------------------");
+    }
 }
