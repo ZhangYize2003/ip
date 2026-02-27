@@ -73,6 +73,15 @@ public class Parser {
                 throw new SakutaException("Use your brain and put a valid integer please...");
             }
 
+        case "find":
+            if (partsBySpace.length < 2) {
+                String keyword = line.substring(4).trim();
+                throw new SakutaException("You finding air is it?");
+            }
+
+            String keyword = line.substring(4).trim();
+            return new FindCommand(keyword);
+
         default:
             // Handles any incorrect inputs
             throw new SakutaException("Huh? What are you even talking about?");
