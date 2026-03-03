@@ -21,6 +21,6 @@ public class TodoCommand extends Command {
         tasks.add(new Todo(description));
         storage.storeTasks(tasks.getAllTasks());
 
-        ui.printResponse("I have added — " + description);
+        ui.printResponse("I have added - " + description);
     }
 }

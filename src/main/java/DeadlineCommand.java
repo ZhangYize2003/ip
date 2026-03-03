@@ -22,6 +22,6 @@ public class DeadlineCommand extends Command{
         tasks.add(new Deadline(description, dueDate));
         storage.storeTasks(tasks.getAllTasks());
 
-        ui.printResponse("I have added — " + description);
+        ui.printResponse("I have added - " + description);
     }
 }

@@ -24,6 +24,6 @@ public class EventCommand extends Command{
         tasks.add(new Event(description, startDate, endDate));
         storage.storeTasks(tasks.getAllTasks());
 
-        ui.printResponse("I have added — " + description);
+        ui.printResponse("I have added - " + description);
     }
 }
