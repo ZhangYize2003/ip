@@ -1,6 +1,10 @@
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Represents a command that searches the task list for tasks
+ * that contain a given keyword.
+ */
 public class FindCommand extends Command {
 
     private String keyword;

@@ -1,5 +1,9 @@
 import java.io.IOException;
 
+/**
+ * Represents a command that unmarks a task as completed
+ * based on its index in the task list.
+ */
 public class UnmarkCommand extends Command {
 
     private int index;

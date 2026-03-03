@@ -1,5 +1,9 @@
 import java.io.IOException;
 
+/**
+ * Represents a command that creates and adds a Todo task to the
+ * task list with the specified description without time constraint.
+ */
 public class TodoCommand extends Command {
 
     private String description;

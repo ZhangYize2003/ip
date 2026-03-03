@@ -1,5 +1,8 @@
 import java.io.IOException;
 
+/**
+ * Represents a command that terminates the execution of Sakuta chatbot.
+ */
 public class ExitCommand extends Command {
 
     @Override

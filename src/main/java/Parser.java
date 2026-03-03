@@ -1,10 +1,20 @@
 import java.io.IOException;
 import java.util.Scanner;
 
+/**
+ * Parses user input and converts it into executable commands.
+ */
 public class Parser {
 
     private Scanner scanner = new Scanner(System.in);
 
+    /**
+     * Reads user input from the console and converts it into a Command object.
+     *
+     * @return The command corresponding to the user input.
+     * @throws SakutaException If the user input is invalid or missing required arguments.
+     * @throws IOException If an input or output error occurs.
+     */
     public Command readCommand() throws SakutaException, IOException {
         System.out.print("> ");
         String line = scanner.nextLine().trim();

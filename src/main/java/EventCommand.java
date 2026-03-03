@@ -1,5 +1,9 @@
 import java.io.IOException;
 
+/**
+ * Represents a command that creates and adds an Event task to the
+ * task list with the specified description, start date, and end date.
+ */
 public class EventCommand extends Command{
     private String description;
     private String startDate;

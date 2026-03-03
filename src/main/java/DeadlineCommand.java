@@ -1,5 +1,9 @@
 import java.io.IOException;
 
+/**
+ * Represents a command that creates and adds a Deadline task to the
+ * task list with the specified description and due date.
+ */
 public class DeadlineCommand extends Command{
     private String description;
     private String dueDate;
