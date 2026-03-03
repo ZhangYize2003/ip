@@ -1,5 +1,9 @@
 import java.io.IOException;
 
+/**
+ * Represents a command that deletes a task from the task list.
+ * The task to be deleted is identified by its index in the list.
+ */
 public class DeleteCommand extends Command {
 
     private int index;

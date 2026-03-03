@@ -1,5 +1,13 @@
+/**
+ * Represents a todo task without any time constraint.
+ */
 public class Todo extends Task {
 
+    /**
+     * Class Constructor that creates a todo task.
+     *
+     * @param description Description of the task.
+     */
     public Todo(String description) {
         super(description);
     }
